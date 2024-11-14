@@ -1,0 +1,55 @@
+class BasketballGame:
+    def __init__(self):
+        self.home_score = 0
+        self.away_score = 0
+        self.quarter = 1
+        self.time_remaining = 720  # 12 minutes in seconds
+        
+    def shoot_basket(self, team, shot_type):
+        """
+        Attempt a basket for the specified team
+        shot_type can be: '2pt' or '3pt' or 'free_throw'
+        """
+        if shot_type == '2pt':
+            success_rate = 0.45
+            points = 2
+        elif shot_type == '3pt':
+            success_rate = 0.35
+            points = 3
+        else:  # free throw
+            success_rate = 0.75
+            points = 1
+            
+        if random.random() < success_rate:
+            if team == 'home':
+                self.home_score += points
+            else:
+                self.away_score += points
+            return True
+        return False
+    
+    def next_quarter(self):
+        """Advance to next quarter"""
+        if self.quarter < 4:
+            self.quarter += 1
+            self.time_remaining = 720
+        else:
+            print("Game Over!")
+            print(f"Final Score - Home: {self.home_score} Away: {self.away_score}")
+            
+    def run_time(self, seconds):
+        """Run game clock by specified seconds"""
+        self.time_remaining = max(0, self.time_remaining - seconds)
+        if self.time_remaining == 0:
+            self.next_quarter()
+            
+    def get_score(self):
+        """Return current score"""
+        return f"Home: {self.home_score} Away: {self.away_score}"
+
+# Example usage:
+game = BasketballGame()
+game.shoot_basket('home', '3pt')  # Attempt 3-pointer for home team
+game.shoot_basket('away', '2pt')  # Attempt 2-pointer for away team
+game.run_time(30)  # Run 30 seconds off the clock
+print(game.get_score())  # Get current score
